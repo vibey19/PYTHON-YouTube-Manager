@@ -45,19 +45,17 @@ def load_data():
 
 
 def list_all_videos(videos):
-    print("\n")
-    print("*" * 60)
+    print("\n{:<5} {:<50} {:<30} {:<20} {:<10}".format(
+        "ID", "Title", "Channel", "Duration", "Views"))
+    print("-" * 115)
     for index, video in enumerate(videos, start=1):
         hours = video['time'] // 3600
         minutes = (video['time'] % 3600) // 60
         seconds = video['time'] % 60
-        print(f"{index}. Title: {video['name']}")
-        print(f"   Duration: {hours} hours {
-              minutes} minutes {seconds} seconds")
-        print(f"   Channel: {video['author']}")
-        print(f"   Views: {video['views']}")
-        print("-" * 60)
-    print("*" * 60)
+        duration = f"{hours}h {minutes}m {seconds}s"
+        print("{:<5} {:<50} {:<30} {:<20} {:<10}".format(
+            index, video['name'], video['author'], duration, video['views']))
+    print("-" * 115)
 
 # Function to add a video
 
@@ -69,6 +67,7 @@ def add_video(videos):
         videos.append({'name': title, 'author': author,
                       'time': duration, 'views': views, 'url': url})
         save_default(videos)
+        print("Video added successfully.")
     except Exception as e:
         print("An error occurred:", e)
 
@@ -77,8 +76,7 @@ def add_video(videos):
 
 def update_video(videos):
     list_all_videos(videos)
-    index = int(input("Enter the video number you wish to update : "))
-
+    index = int(input("Enter the video number you wish to update: "))
     if 1 <= index <= len(videos):
         url = input("Enter the new YouTube URL: ")
         try:
@@ -86,23 +84,24 @@ def update_video(videos):
             videos[index-1] = {'name': title, 'author': author,
                                'time': duration, 'views': views, 'url': url}
             save_default(videos)
+            print("Video updated successfully.")
         except Exception as e:
             print("An error occurred:", e)
     else:
-        print("Please enter a valid video number!!")
+        print("Please enter a valid video number!")
 
 # Function to delete a video
 
 
 def delete_video(videos):
     list_all_videos(videos)
-    index = int(input("Enter the video number you wish to delete : "))
-
+    index = int(input("Enter the video number you wish to delete: "))
     if 1 <= index <= len(videos):
         del videos[index - 1]
         save_default(videos)
+        print("Video deleted successfully.")
     else:
-        print("Please enter a valid video number!!")
+        print("Please enter a valid video number!")
 
 # Function to save video data to file
 
@@ -117,28 +116,25 @@ def save_default(videos):
 def main():
     videos = load_data()
     while True:
-        print("****** YOUTUBE MANAGER ******")
+        print("\n****** YOUTUBE MANAGER ******")
         print("1. List all YouTube videos")
         print("2. Add a YouTube video")
         print("3. Update a YouTube video")
         print("4. Delete a YouTube video")
         print("5. Exit")
-        print("\n")
-        choice = input("Enter Your Choice : ")
-
-        match choice:
-            case '1':
-                list_all_videos(videos)
-            case '2':
-                add_video(videos)
-            case '3':
-                update_video(videos)
-            case '4':
-                delete_video(videos)
-            case '5':
-                break
-            case _:
-                print("Invalid Choice : ")
+        choice = input("Enter your choice: ")
+        if choice == '1':
+            list_all_videos(videos)
+        elif choice == '2':
+            add_video(videos)
+        elif choice == '3':
+            update_video(videos)
+        elif choice == '4':
+            delete_video(videos)
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice!")
 
 
 if __name__ == "__main__":

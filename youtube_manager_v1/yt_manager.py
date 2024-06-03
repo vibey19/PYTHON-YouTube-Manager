@@ -11,11 +11,14 @@ def load_data():
 
 
 def list_all_videos(videos):
-    print("\n")
-    print("*" * 35)
-    for index, video in enumerate(videos, start=1):
-        print(f"{index}. {video['name']}, Duration : {video['time']}")
-    print("*" * 35)
+    if not videos:
+        print("No videos available.")
+    else:
+        print("\n")
+        print("*" * 35)
+        for index, video in enumerate(videos, start=1):
+            print(f"{index}. {video['name']}, Duration : {video['time']}")
+        print("*" * 35)
 
 
 def add_video(videos):
@@ -23,6 +26,7 @@ def add_video(videos):
     time = input("Enter the new video time : ")
     videos.append({'name': name, 'time': time})
     save_default(videos)
+    print("Video added successfully.")
 
 
 def update_video(videos):
@@ -34,24 +38,29 @@ def update_video(videos):
         time = input("Enter the new video time : ")
         videos[index-1] = {'name': name, 'time': time}
         save_default(videos)
+        print("Video updated successfully.")
     else:
-        print("Please enter valid video number!!")
+        print("Please enter a valid video number!!")
 
 
 def delete_video(videos):
     list_all_videos(videos)
-    index = int(input("Enter the video number you wish to update : "))
+    index = int(input("Enter the video number you wish to delete : "))
 
     if 1 <= index <= len(videos):
         del videos[index - 1]
         save_default(videos)
+        print("Video deleted successfully.")
     else:
-        print("Please enter valid video number!!")
+        print("Please enter a valid video number!!")
 
 
 def save_default(videos):
-    with open("youtubeList.txt", "w") as file:
-        json.dump(videos, file)
+    try:
+        with open("youtubeList.txt", "w") as file:
+            json.dump(videos, file)
+    except Exception as e:
+        print(f"Failed to save data: {e}")
 
 
 def main():
